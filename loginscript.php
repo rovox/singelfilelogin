@@ -12,14 +12,20 @@
  * 2 password don't match
  * 3 email is not vaild
  *  */
+/* ERRROR CODES change password!!!!!!!
+ * 0 everything was good.
+ * 1 username does not exits
+ * 2 old password don't match
+ * 3 email is not vaild
+ *  */
 
 class login {
 
     var $db_host = 'localhost';
-    var $db_username = 'dbusername';
-    var $db_password = 'dbpassword';
-    var $db_name = 'dbname';
-    var $db_tabel = 'dbtable';
+    var $db_username = 'mijnrovox';
+    var $db_password = 'repevaqe9';
+    var $db_name = 'zadmin_mijnrovox';
+    var $db_tabel = 'users';
 
     public function __construct() {
         //echo 'contruct<br>';
@@ -93,16 +99,29 @@ class login {
         }
     }
 
-    /* the logout funtion */
-
-    public function logout() {
-        return 'hello world';
-    }
-
     /* the editaccout funtion */
 
-    public function editaccount() {
-        
+    public function changepassword($username, $oldpassword, $newpassword) {
+        $username = $this->cleartext($username);
+        $oldpassword = $this->cleartext($oldpassword);
+        $newpassword = $this->cleartext($newpassword);
+        $result = mysql_query("SELECT * FROM users WHERE username = '$username'");
+        $salt = $this->getsalt($username);
+        while ($row = mysql_fetch_array($result)) {
+            $passworddb = $row['password'];
+        }
+        if ($this->checkusername($username) == 1) {
+            if ($this->hashpassword($salt, $oldpassword) == $passworddb) {
+                $newsalt = $this->createsalt();
+                $newpassword = $this->hashpassword($newsalt, $newpassword);
+                mysql_query("UPDATE users SET password='$newpassword', salt='$newsalt' WHERE username='$username'") or die(mysql_error());
+                return 0;
+            } else {
+                return 2;
+            }
+        } else {
+            return 1;
+        }
     }
 
     /* the hashpassword funtion */
