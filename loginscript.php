@@ -23,9 +23,9 @@ class login {
 
     var $db_host = 'localhost';
     var $db_username = 'mijnrovox';
-    var $db_password = 'repevaqe9';
+    var $db_password = 'dbpass';
     var $db_name = 'zadmin_mijnrovox';
-    var $db_tabel = 'users';
+    var $db_tabel = 'df';
 
     public function __construct() {
         //echo 'contruct<br>';
